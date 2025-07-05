@@ -26,7 +26,11 @@ export default function LoginPage() {
       localStorage.setItem("user", JSON.stringify(data.data.user));
       router.push("/home");
     } catch (error: unknown) {
-      setError(error?.message || "Error al iniciar sesión");
+      if (error && typeof error === "object" && "message" in error) {
+        setError((error as { message: string }).message);
+      } else {
+        setError("Error al iniciar sesión");
+      }
     }
   };
 

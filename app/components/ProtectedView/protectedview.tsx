@@ -2,32 +2,42 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-interface ProtectedViewProps {
+interface ProtectedRouteProps {
   children: React.ReactNode;
+  redirectTo?: string;
+  validator?: () => boolean;
 }
 
-export default function ProtectedView({ children }: ProtectedViewProps) {
+export default function ProtectedRoute({
+  children,
+  redirectTo = "/",
+  validator,
+}: ProtectedRouteProps) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      setIsAuthenticated(false);
-      router.replace("/");
+    const valid = validator ? validator() : !!token;
+    if (!valid) {
+      router.replace(redirectTo);
     } else {
-      setIsAuthenticated(true);
+      setIsAllowed(true);
     }
-  }, [router]);
 
-  if (isAuthenticated === null) {
-    return <p className="text-center py-10 text-gray-500">Verificando sesión...</p>;
+    setChecking(false);
+  }, [router, validator, redirectTo]);
+
+  if (checking) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-500">
+        Verificando acceso...
+      </div>
+    );
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAllowed) return null;
 
   return <>{children}</>;
 }

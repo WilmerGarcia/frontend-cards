@@ -6,14 +6,15 @@ import {
   getCardById,
 } from "./cardservice";
 import CardFormModal from "./CardFormModal";
+import { CardData, CardDescription } from "@/common/interfaces/CardInterface";
 
 export default function CardList() {
-  const [cards, setCards] = useState<any[]>([]);
+  const [cards, setCards] = useState<CardData[]>([]);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<any | null>(null);
+  const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   const loadCards = async () => {
@@ -33,6 +34,7 @@ export default function CardList() {
 
   useEffect(() => {
     loadCards();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const handleDelete = async (id: number) => {
@@ -105,7 +107,7 @@ export default function CardList() {
             <div key={card.id} className="border p-4 rounded shadow">
               <h3 className="text-xl font-semibold">{card.title}</h3>
               <ul className="pl-5 list-disc text-gray-700">
-                {card.descriptions?.map((desc: any) => (
+                {card.descriptions?.map((desc: CardDescription) => (
                   <li key={desc.id}>{desc.description}</li>
                 ))}
               </ul>
@@ -134,7 +136,7 @@ export default function CardList() {
       {/* Modal de creación / edición */}
       {showModal && (
         <CardFormModal
-          initialData={selectedCard}
+          initialData={selectedCard ?? undefined}
           onClose={() => {
             setShowModal(false);
             loadCards();

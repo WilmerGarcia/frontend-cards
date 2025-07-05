@@ -1,14 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { createCard, updateCard } from "./cardservice";
-
-interface Props {
-  initialData?: any;
-  onClose: () => void;
-}
+import { CardDescription, Props } from "@/common/interfaces/CardInterface";
 
 export default function CardFormModal({ initialData, onClose }: Props) {
-  console.log(initialData);
   const [title, setTitle] = useState("");
   const [descriptions, setDescriptions] = useState<string[]>([""]);
 
@@ -16,7 +11,7 @@ export default function CardFormModal({ initialData, onClose }: Props) {
     if (initialData) {
       setTitle(initialData.title);
       setDescriptions(
-        initialData.descriptions?.map((d: any) => d.description) || [""]
+        initialData.descriptions?.map((d: CardDescription) => d.description) || [""]
       );
     }
   }, [initialData]);
