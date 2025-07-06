@@ -11,6 +11,7 @@ Este es el frontend del proyecto **Cards**, construido con **Next.js 14**, **Typ
 ```txt
 Como clonar el repositorio:
 git clone <url-del-repositorio>
+```
 
 Instalar dependencias:
 
